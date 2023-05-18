@@ -1,0 +1,113 @@
+﻿using C__WEB_API_REST_SQL.Models;
+using Microsoft.AspNetCore.Mvc;
+
+namespace C__WEB_API_REST_SQL.Controllers
+
+    
+{
+
+    [ApiController]
+    [Route("cliente")]
+    public class ClienteController : ControllerBase  //PARA QUE SEA UN CONTROLADOR
+    {
+        [HttpGet]
+        [Route("listar")]
+        public dynamic listarClientes()//DYNAMIC Se utiliza cuando el tipo exacto de un objeto no se conoce en tiempo de compilación y se necesita flexibilidad para trabajar con diferentes tipos de datos.
+
+        {
+            //AQUI SE OBTINE EL CLIENTE DE LA DB
+
+            List<Cliente> clientes = new List<Cliente> {
+
+                new Cliente
+                {
+                id="1",
+                correo = "google@gmail.com",
+                edad ="19",
+                nombre = "Enrique"
+
+                },
+
+                new Cliente
+                {
+                id="2",
+                correo = "google@gmail.com",
+                edad ="20",
+                nombre = "Dylan"
+
+                }
+
+            };
+            return clientes;
+        }
+
+        [HttpGet]
+        [Route("listarxid")]
+
+        public dynamic listarClienteId(int codigo)//DYNAMIC Se utiliza cuando el tipo exacto de un objeto no se conoce en tiempo de compilación y se necesita flexibilidad para trabajar con diferentes tipos de datos.
+
+            {
+            //AQUI SE OBTINE EL CLIENTE DE LA DB
+                return new
+                {
+                    id = codigo,
+                    correo = "correo@gmail.com",
+                    edad = "20",
+                    nombre = "UsuarioPorId"
+
+                };
+
+            }
+
+
+         [HttpPost]
+         [Route("Guardar")]
+
+         public dynamic guardarCliente(Cliente cliente)
+            {
+              cliente.id = "3";
+               return new
+                  {
+                    success = true,
+                    message = "Cliente registrado",
+                    result = cliente
+
+                  };
+
+
+            }
+
+
+        [HttpPost]
+        [Route("eliminar")]
+
+        public dynamic eliminarCliente(Cliente cliente) //Recibe el cliente  a eliminar
+        {
+            //CUANDO SE HACE UNA LLMADA O SOLICITUD TODOS LOS PARAMETROS SE ALMACENAN EN LA VARIBLE REQUEST
+            string token = Request.Headers.Where(x => x.Key == "Authorization").FirstOrDefault().Value; //OBTENER EL VALOR DEL HEADER AUTHORIZATION, VERLO EN POSTMAN 
+            //Eliminar en la db
+            if (token != "Dylan") {
+
+                return new
+                {
+                    success = false,
+                    message = "token incorrecto",
+                    result = ""
+
+                };
+
+            }
+
+            return new
+            {
+                success = true,
+                message = "Cliente eliminado",
+                result = cliente
+
+            };
+
+
+        }
+
+    }
+ }

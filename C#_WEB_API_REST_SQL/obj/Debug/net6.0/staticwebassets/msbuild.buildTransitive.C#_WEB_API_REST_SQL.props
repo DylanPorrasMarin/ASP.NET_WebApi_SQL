@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\C#_WEB_API_REST_SQL.props" />
+</Project>
