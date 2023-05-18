@@ -8,6 +8,6 @@
 
         public string Nombre { get; set; }
 
-        public string precio { get; set; }
+        public string Precio { get; set; }
     }
 }

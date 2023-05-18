@@ -80,7 +80,7 @@ namespace C__WEB_API_REST_SQL.Recursos
             }
         }
 
-        public static bool Ejecutar(string nombreProcedimiento, List<Parametro> parametros = null)
+        public static dynamic Ejecutar(string nombreProcedimiento, List<Parametro> parametros = null)
         {
             SqlConnection conexion = new SqlConnection(cadenaConexion);
 
@@ -88,7 +88,7 @@ namespace C__WEB_API_REST_SQL.Recursos
             {
                 conexion.Open();
                 SqlCommand cmd = new SqlCommand(nombreProcedimiento, conexion);
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.CommandType =CommandType.StoredProcedure;
 
                 if (parametros != null)
                 {
@@ -100,11 +100,23 @@ namespace C__WEB_API_REST_SQL.Recursos
 
                 int i = cmd.ExecuteNonQuery();
 
-                return (i > 0) ? true : false;
+                bool exito = (i > 0) ? true : false; //Si todo sale bien se retorna true y sino un false
+                return new
+                {
+                    exito,
+                    mensaje = "exito"
+
+                };
             }
             catch (Exception ex)
             {
-                return false;
+                return new  
+                {
+                    exito = false,
+                    mensaje = ex.Message
+                
+                };
+                
             }
             finally
             {
