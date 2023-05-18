@@ -1,5 +1,7 @@
 ﻿using C__WEB_API_REST_SQL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace C__WEB_API_REST_SQL.Controllers
 
@@ -24,7 +26,7 @@ namespace C__WEB_API_REST_SQL.Controllers
                 id="1",
                 correo = "google@gmail.com",
                 edad ="19",
-                nombre = "Enrique"
+                nombre = "Mateo"
 
                 },
 
@@ -80,34 +82,33 @@ namespace C__WEB_API_REST_SQL.Controllers
 
         [HttpPost]
         [Route("eliminar")]
-
-        public dynamic eliminarCliente(Cliente cliente) //Recibe el cliente  a eliminar
+        [Authorize] //PARA EVITAR EL GASTO DE RECURSOS YA QUE SI O SI DEBE DE ENVIARSE UN TOKEN VALIDO
+        public dynamic eliminarCliente(Cliente cliente)
         {
-            //CUANDO SE HACE UNA LLMADA O SOLICITUD TODOS LOS PARAMETROS SE ALMACENAN EN LA VARIBLE REQUEST
-            string token = Request.Headers.Where(x => x.Key == "Authorization").FirstOrDefault().Value; //OBTENER EL VALOR DEL HEADER AUTHORIZATION, VERLO EN POSTMAN 
-            //Eliminar en la db
-            if (token != "Dylan") {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
 
+            var rToken = Jwt.ValidarToken(identity);
+
+            if (!rToken.success) return rToken;
+
+            Usuario usuario = rToken.result;
+
+            if (usuario.role != "Administrador")
+            {
                 return new
                 {
                     success = false,
-                    message = "token incorrecto",
+                    message = "No tienes permisos para eliminar clientes",
                     result = ""
-
                 };
-
             }
 
             return new
             {
                 success = true,
-                message = "Cliente eliminado",
+                message = "cliente eliminado",
                 result = cliente
-
             };
-
-
         }
-
     }
  }

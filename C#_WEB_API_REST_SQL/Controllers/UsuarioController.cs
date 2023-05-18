@@ -1,9 +1,7 @@
 ﻿using C__WEB_API_REST_SQL.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using System;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -65,7 +63,7 @@ namespace C__WEB_API_REST_SQL.Controllers
                 jwt.Issuer,
                 jwt.Audience,
                 claims,
-                expires: DateTime.Now.AddMinutes(4),
+                expires: DateTime.Now.AddMinutes(4),  //CUANTO TIEMPO PARA QUE VENZA EL TOKEN DEL USUARIO
                 signingCredentials: singIn
 
                 );
